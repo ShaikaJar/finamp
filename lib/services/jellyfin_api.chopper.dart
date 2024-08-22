@@ -365,10 +365,10 @@ final class _$JellyfinApi extends JellyfinApi {
   @override
   Future<dynamic> startRemotePlayback({
     required String sessionId,
-    required PlayCommand playCommand,
+    required String playCommand,
     required List<String> itemIds,
-    int? startPositionTicks,
-    int? startIndex,
+    int startPositionTicks = 0,
+    int startIndex = 0,
   }) async {
     final Uri $url = Uri.parse('/Sessions/${sessionId}/Playing');
     final Map<String, dynamic> $params = <String, dynamic>{

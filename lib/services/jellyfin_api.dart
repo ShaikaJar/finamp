@@ -278,10 +278,10 @@ abstract class JellyfinApi extends ChopperService {
   @Post(path: "/Sessions/{sessionId}/Playing")
   Future<dynamic> startRemotePlayback({
     @Path() required String sessionId,
-    @Query() required PlayCommand playCommand,
+    @Query() required String playCommand,
     @Query() required List<String> itemIds,
-    @Query() int? startPositionTicks,
-    @Query() int? startIndex
+    @Query() int startPositionTicks = 0,
+    @Query() int startIndex = 0
   });
 
   @FactoryConverter(request: JsonConverter.requestFactory)

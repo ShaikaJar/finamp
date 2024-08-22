@@ -19,6 +19,8 @@ import 'finamp_user_helper.dart';
 import 'jellyfin_api.dart' as jellyfin_api;
 
 class JellyfinApiHelper {
+
+  String? _sessionId;
   final jellyfinApi = jellyfin_api.JellyfinApi.create(true);
   final _jellyfinApiHelperLogger = Logger("JellyfinApiHelper");
 
@@ -116,6 +118,7 @@ class JellyfinApiHelper {
     int? limit,
   }) async {
     final currentUserId = _finampUserHelper.currentUser?.id;
+
     if (currentUserId == null) {
       // When logging out, this request causes errors since currentUser is
       // required sometimes. We just return an empty list since this error
@@ -856,5 +859,39 @@ class JellyfinApiHelper {
     }
 
     return uri;
+  }
+
+  Future<List<SessionInfo>> getControllableSessions() async{
+    final currentUserId = _finampUserHelper.currentUser?.id;
+
+    if(currentUserId == null){
+      return [];
+    }
+
+    var sessions = (await jellyfinApi.getControllableSessions(userId: currentUserId))
+      .map((session)=>SessionInfo.fromJson(session))
+      .where((session)=>(session.playableMediaTypes?.contains('Audio') ?? false) )
+      .toList();
+    return sessions;
+  }
+
+  Future<void> playRemote({
+    required List<String> itemIds, 
+    int startIndex = 0 ,
+    int startPositionTicks=0
+  }) async{
+    final currentUserId = _finampUserHelper.currentUser?.id;
+    final sessionId = this._sessionId;
+    if(currentUserId == null || sessionId == null){
+      return;
+    }
+
+    await jellyfinApi.startRemotePlayback(
+      sessionId: sessionId, 
+      playCommand: PlayCommand.playNow.value, 
+      itemIds: itemIds,
+      startIndex: startIndex,
+      startPositionTicks: startPositionTicks
+    );
   }
 }
