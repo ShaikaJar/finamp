@@ -260,6 +260,30 @@ abstract class JellyfinApi extends ChopperService {
     @Body() required BaseItemDto newItem,
   });
 
+  // DLNA-Sessions
+
+  @FactoryConverter(
+    request: JsonConverter.requestFactory,
+    response: JsonConverter.responseFactory
+  )
+  @Get(path: "/Sessions")
+  Future<List<dynamic>> getControllableSessions({@Query() required String userId});
+
+
+
+  @FactoryConverter(
+    request: JsonConverter.requestFactory,
+    response: JsonConverter.responseFactory
+    )
+  @Post(path: "/Sessions/{sessionId}/Playing")
+  Future<dynamic> startRemotePlayback({
+    @Path() required String sessionId,
+    @Query() required PlayCommand playCommand,
+    @Query() required List<String> itemIds,
+    @Query() int? startPositionTicks,
+    @Query() int? startIndex
+  });
+
   @FactoryConverter(request: JsonConverter.requestFactory)
   @Post(path: "/Sessions/Playing")
   Future<dynamic> startPlayback(

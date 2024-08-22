@@ -344,6 +344,54 @@ final class _$JellyfinApi extends JellyfinApi {
   }
 
   @override
+  Future<List<dynamic>> getControllableSessions(
+      {required String userId}) async {
+    final Uri $url = Uri.parse('/Sessions');
+    final Map<String, dynamic> $params = <String, dynamic>{'userId': userId};
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    final Response $response = await client.send<List<dynamic>, List<dynamic>>(
+      $request,
+      requestConverter: JsonConverter.requestFactory,
+      responseConverter: JsonConverter.responseFactory,
+    );
+    return $response.bodyOrThrow;
+  }
+
+  @override
+  Future<dynamic> startRemotePlayback({
+    required String sessionId,
+    required PlayCommand playCommand,
+    required List<String> itemIds,
+    int? startPositionTicks,
+    int? startIndex,
+  }) async {
+    final Uri $url = Uri.parse('/Sessions/${sessionId}/Playing');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'playCommand': playCommand,
+      'itemIds': itemIds,
+      'startPositionTicks': startPositionTicks,
+      'startIndex': startIndex,
+    };
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    final Response $response = await client.send<dynamic, dynamic>(
+      $request,
+      requestConverter: JsonConverter.requestFactory,
+      responseConverter: JsonConverter.responseFactory,
+    );
+    return $response.bodyOrThrow;
+  }
+
+  @override
   Future<dynamic> startPlayback(
       PlaybackProgressInfo playbackProgressInfo) async {
     final Uri $url = Uri.parse('/Sessions/Playing');

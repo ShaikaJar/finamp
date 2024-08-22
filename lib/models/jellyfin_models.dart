@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jellyfin_models.g.dart';
 
@@ -30,6 +31,20 @@ mixin RunTimeTickDuration {
       runTimeTicks == null ? null : Duration(microseconds: runTimeTicks! ~/ 10);
 
   abstract int? runTimeTicks;
+}
+
+enum PlayCommand{
+  playNow("PlayNow"),
+  playNext("PlayNext"),
+  playLast("PlayLast"),
+  playInstantMix("PlayInstantMix"),
+  playShuffle("PlayShuffle");
+
+  const PlayCommand(this.value);
+
+  final String value;
+  @override
+  String toString() => value;
 }
 
 @JsonSerializable(
