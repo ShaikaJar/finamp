@@ -7,6 +7,7 @@ import 'package:finamp/color_schemes.g.dart';
 import 'package:finamp/components/AlbumScreen/song_menu.dart';
 import 'package:finamp/components/Buttons/simple_button.dart';
 import 'package:finamp/components/PlayerScreen/player_screen_appbar_title.dart';
+import 'package:finamp/components/device_menu.dart';
 import 'package:finamp/models/finamp_models.dart';
 import 'package:finamp/screens/lyrics_screen.dart';
 import 'package:finamp/services/current_track_metadata_provider.dart';
@@ -409,7 +410,12 @@ class _PlayerScreenContent extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Spacer(),
+              Flexible(
+                  fit: FlexFit.tight,
+                  child: IconButton(
+                    icon: const Icon(TablerIcons.cast),
+                    onPressed: () => showDeviceMenu(context),
+                  )),
               const Flexible(fit: FlexFit.tight, child: QueueButton()),
               Flexible(
                 fit: FlexFit.tight,

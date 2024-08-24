@@ -576,7 +576,7 @@ class JellyfinApiHelper {
         throw "An unknown error occurred while removing items from the playlist. Status code: ${response.statusCode}";
       }
       throw "${response.error}. Status code: ${response.statusCode}";
-    } 
+    }
   }
 
   /// Updates an item.
@@ -861,37 +861,39 @@ class JellyfinApiHelper {
     return uri;
   }
 
-  Future<List<SessionInfo>> getControllableSessions() async{
+  Future<List<SessionInfo>> getControllableSessions() async {
     final currentUserId = _finampUserHelper.currentUser?.id;
 
-    if(currentUserId == null){
+    if (currentUserId == null) {
       return [];
     }
 
-    var sessions = (await jellyfinApi.getControllableSessions(userId: currentUserId))
-      .map((session)=>SessionInfo.fromJson(session))
-      .where((session)=>(session.playableMediaTypes?.contains('Audio') ?? false) )
-      .toList();
+    var sessions =
+        (await jellyfinApi.getControllableSessions(userId: currentUserId))
+            .map((session) => SessionInfo.fromJson(session))
+            .where((session) =>
+                (session.playableMediaTypes?.contains('Audio') ?? false) &&
+                session.supportsRemoteControl &&
+                session.supportsMediaControl)
+            .toList();
     return sessions;
   }
 
-  Future<void> playRemote({
-    required List<String> itemIds, 
-    int startIndex = 0 ,
-    int startPositionTicks=0
-  }) async{
+  Future<void> playRemote(
+      {required List<String> itemIds,
+      int startIndex = 0,
+      int startPositionTicks = 0}) async {
     final currentUserId = _finampUserHelper.currentUser?.id;
     final sessionId = this._sessionId;
-    if(currentUserId == null || sessionId == null){
+    if (currentUserId == null || sessionId == null) {
       return;
     }
 
     await jellyfinApi.startRemotePlayback(
-      sessionId: sessionId, 
-      playCommand: PlayCommand.playNow.value, 
-      itemIds: itemIds,
-      startIndex: startIndex,
-      startPositionTicks: startPositionTicks
-    );
+        sessionId: sessionId,
+        playCommand: PlayCommand.playNow.value,
+        itemIds: itemIds,
+        startIndex: startIndex,
+        startPositionTicks: startPositionTicks);
   }
 }
